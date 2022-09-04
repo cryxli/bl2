@@ -17,3 +17,6 @@
 a.rare,a.epic,a.etech,a.legendary,a.pearlescent,a.effervescent,a.seraph { font-weight: bold; text-decoration: none; }
 
 a.rare:hover,a.epic:hover,a.etech:hover,a.legendary:hover,a.pearlescent:hover,a.effervescent:hover,a.seraph:hover { text-decoration: underline; }
+
+img.item-type { margin-right: 0.25em; margin-top: -4px; }
+a.item-element { text-decoration: none; color: black; }
