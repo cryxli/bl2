@@ -11,8 +11,12 @@
 .etech,.etech:hover { color:#ff5cec; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
 .legendary,.legendary:hover { color:#ffc338; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
 .pearlescent,.pearlescent:hover { color: #4df2f2; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
+.seraph,.seraph:hover { color: #ff99c8; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
 .effervescent,.effervescent:hover { color:#ff7570; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
 
-a.rare,a.epic,a.etech,a.legendary,a.pearlescent,a.effervescent { font-weight: bold; text-decoration: none; }
+a.rare,a.epic,a.etech,a.legendary,a.pearlescent,a.effervescent,a.seraph { font-weight: bold; text-decoration: none; }
 
-a.rare:hover,a.epic:hover,a.etech:hover,a.legendary:hover,a.pearlescent:hover,a.effervescent:hover { text-decoration: underline; }
+a.rare:hover,a.epic:hover,a.etech:hover,a.legendary:hover,a.pearlescent:hover,a.effervescent:hover,a.seraph:hover { text-decoration: underline; }
+
+img.item-type { margin-right: 0.25em; margin-top: -4px; }
+a.item-element { text-decoration: none; color: black; }

@@ -1,8 +1,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">	<title>Item</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Item</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link href="../common.css" rel="stylesheet">
 </head>
 <body class="container">
 <h1 class="mt-5">Items</h1>
@@ -11,9 +13,48 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 const indexList = function(response) {
-	$.each(response, function(name, id) {
-		if (!!id) {
-			$('ul').append('<li><a href="itemcard.html?id=' + id + '">' + name + '</a></li>');
+	$.each(response, function(id, data) {
+		var name, type = null, rarity = null, element = null;
+		if (typeof data === 'object' && data != null) {
+			name = data[0];
+			type = data[1];
+			rarity = data[2];
+			element = data[3];
+		} else {
+			name = data;
+		}
+		if (!!name) {
+			const TAG_A = '<a href="itemcard.html?id=' + id + '"';
+			var s = TAG_A;
+			if (!!rarity) { s += ' class="' + rarity + '"'; }
+			name = name.replace(/\([^\)]+\)/,'');
+			s += '>' + name + '</a>';
+			if (!!element) { s += TAG_A + ' class="item-element"> (' + element + ')</a>'; }
+			if (!!type) {
+				if (type === 'Grenade') {
+					s = '<img src="type/grenade.png" width="16" alt="Grenade" class="item-type" />' + s;
+				} else if (type === 'Shield') {
+					s = '<img src="type/shield.png" width="16" alt="Shield" class="item-type" />' + s;
+				} else if (type === 'Rifle') {
+					s = '<img src="type/rifle.png" width="16" alt="Rifle" class="item-type" />' + s;
+				} else if (type === 'SMG') {
+					s = '<img src="type/smg.png" width="16" alt="SMG" class="item-type" />' + s;
+				} else if (type === 'Sniper') {
+					s = '<img src="type/sniper.png" width="16" alt="Sniper" class="item-type" />' + s;
+				} else if (type === 'Pistol') {
+					s = '<img src="type/pistol.png" width="16" alt="Pistol" class="item-type" />' + s;
+				} else if (type === 'Shotgun') {
+					s = '<img src="type/shotgun.png" width="16" alt="Shotgun" class="item-type" />' + s;
+				} else if (type === 'Artefact' || type === 'Artifact') {
+					s = '<img src="type/artefact.png" width="16" alt="Artefact" class="item-type" />' + s;
+				} else if (type === 'Class Mod' || type === 'Class') {
+					s = '<img src="type/classmod.png" width="16" alt="Class Mod" class="item-type" />' + s;
+				} else {
+					s += ' - ' + type;
+				}
+			}
+			s += '</li>';
+			$('ul').append('<li>' + s);
 		}
 	});
 };
