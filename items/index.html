@@ -5,6 +5,9 @@
 	<title>Item</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<link href="../common.css" rel="stylesheet">
+<style>
+a.type { font-family: monospace; text-decoration: none; }
+</style>
 </head>
 <body class="container">
 <h1 class="mt-5">Items</h1>
@@ -13,45 +16,85 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 const indexList = function(response) {
-	$.each(response, function(id, data) {
-		var name, type = null, rarity = null, element = null;
+	var sorted = Object.entries(response).map(entry => {
+		const data = entry[1];
+		var item = {"id": entry[0]};
 		if (typeof data === 'object' && data != null) {
-			name = data[0];
-			type = data[1];
-			rarity = data[2];
-			element = data[3];
+			item.name = data[0];
+			item.type = data[1];
+			if (item.type === 'Artefact') { item.type = 'Artifact'; }
+			else if (item.type === 'Class Mod') { item.type = 'Class'; }
+			item.rarity = data[2];
+			item.element = data[3]||null;
+			item.sort = (data[4]||data[0]).toLowerCase();
 		} else {
-			name = data;
+			item.name = data;
+			item.sort = data;
 		}
-		if (!!name) {
-			const TAG_A = '<a href="itemcard.html?id=' + id + '"';
+		return item;
+	}).sort((a, b) => {
+		if (a.sort === b.sort) { return 0; } 
+		else if (a.sort > b.sort) { return 1; } 
+		else { return -1; }
+	});
+
+	const filterType = (function(){
+		var s = (window.location.search||'?').substring(1);
+		if (s.indexOf('type=') >= 0) {
+			s = s.substring(s.indexOf('type=') + 5);
+			if (s.indexOf('&') > 0) {
+				s = s.substring(0, s.indexOf('&'));
+			}
+			return s;
+		} else {
+			return 'all';
+		}
+	})();
+
+	$.each(sorted, (counter,item) => {
+		if (!!item.name) {
+			const TAG_A = '<a href="itemcard.html?id=' + item.id + '"';
 			var s = TAG_A;
-			if (!!rarity) { s += ' class="' + rarity + '"'; }
-			name = name.replace(/\([^\)]+\)/,'');
-			s += '>' + name + '</a>';
-			if (!!element) { s += TAG_A + ' class="item-element"> (' + element + ')</a>'; }
-			if (!!type) {
-				if (type === 'Grenade') {
-					s = '<img src="type/grenade.png" width="16" alt="Grenade" class="item-type" />' + s;
-				} else if (type === 'Shield') {
-					s = '<img src="type/shield.png" width="16" alt="Shield" class="item-type" />' + s;
-				} else if (type === 'Rifle') {
-					s = '<img src="type/rifle.png" width="16" alt="Rifle" class="item-type" />' + s;
-				} else if (type === 'SMG') {
-					s = '<img src="type/smg.png" width="16" alt="SMG" class="item-type" />' + s;
-				} else if (type === 'Sniper') {
-					s = '<img src="type/sniper.png" width="16" alt="Sniper" class="item-type" />' + s;
-				} else if (type === 'Pistol') {
-					s = '<img src="type/pistol.png" width="16" alt="Pistol" class="item-type" />' + s;
-				} else if (type === 'Shotgun') {
-					s = '<img src="type/shotgun.png" width="16" alt="Shotgun" class="item-type" />' + s;
-				} else if (type === 'Artefact' || type === 'Artifact') {
-					s = '<img src="type/artefact.png" width="16" alt="Artefact" class="item-type" />' + s;
-				} else if (type === 'Class Mod' || type === 'Class') {
-					s = '<img src="type/classmod.png" width="16" alt="Class Mod" class="item-type" />' + s;
-				} else {
-					s += ' - ' + type;
+			if (!!item.rarity) { s += ' class="' + item.rarity + '"'; }
+			item.name = item.name.replace(/\([^\)]+\)/,'');
+			s += '>' + item.name + '</a>';
+			if (!!item.element) { s += TAG_A + ' class="item-element"> (' + item.element + ')</a>'; }
+			if (!!item.type) {
+				if (filterType !== 'all' && filterType !== item.type) {
+					return;
 				}
+				if (item.type === 'Grenade') {
+					s = '<img src="type/grenade.png" width="16" alt="Grenade" class="item-type" />' + s;
+					s = '<a href="?type=Grenade" class="type" title="Grenade">:G:</a> ' + s;
+				} else if (item.type === 'Shield') {
+					s = '<img src="type/shield.png" width="16" alt="Shield" class="item-type" />' + s;
+					s = '<a href="?type=Shield" class="type" title="Shield">:H:</a> ' + s;
+				} else if (item.type === 'Rifle') {
+					s = '<img src="type/rifle.png" width="16" alt="Rifle" class="item-type" />' + s;
+					s = '<a href="?type=Rifle" class="type" title="Assault Rifle">:R:</a> ' + s;
+				} else if (item.type === 'SMG') {
+					s = '<img src="type/smg.png" width="16" alt="SMG" class="item-type" />' + s;
+					s = '<a href="?type=SMG" class="type" title="Submachine gun">:M:</tt> ' + s;
+				} else if (item.type === 'Sniper') {
+					s = '<img src="type/sniper.png" width="16" alt="Sniper" class="item-type" />' + s;
+					s = '<a href="?type=Sniper" class="type" title="Sniper Rifle">:S:</a> ' + s;
+				} else if (item.type === 'Pistol') {
+					s = '<img src="type/pistol.png" width="16" alt="Pistol" class="item-type" />' + s;
+					s = '<a href="?type=Pistol" class="type" title="Pistol">:P:</a> ' + s;
+				} else if (item.type === 'Shotgun') {
+					s = '<img src="type/shotgun.png" width="16" alt="Shotgun" class="item-type" />' + s;
+					s = '<a href="?type=Shotgun" class="type" title="Shotgun">:O:</a> ' + s;
+				} else if (item.type === 'Artifact') {
+					s = '<img src="type/artefact.png" width="16" alt="Artefact" class="item-type" />' + s;
+					s = '<a href="?type=Artifact" class="type" title="Relict">:A:</a> ' + s;
+				} else if (item.type === 'Class Mod' || item.type === 'Class') {
+					s = '<img src="type/classmod.png" width="16" alt="Class Mod" class="item-type" />' + s;
+					s = '<a href="?type=Class" class="type" title="Class Mod">:C:</a> ' + s;
+				} else {
+					s += ' - ' + item.type;
+				}
+			} else {
+				return;
 			}
 			s += '</li>';
 			$('ul').append('<li>' + s);

@@ -4,6 +4,7 @@
 .corrosive { color: #7ecb40; }
 .slag { color: #9e00d8; }
 .none { color: #ffffff; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
+.explosive { color: #dcdb0d }
 
 /* rarities */
 .rare,.rare:hover { color:#28a6ff; text-shadow: 1px 1px 2px black, -1px 1px 2px black, 1px -1px 2px black, -1px -1px 2px black; }
